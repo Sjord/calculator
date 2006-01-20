@@ -1,10 +1,20 @@
 <?php
 
-	$exp = "(23 + 3)*5/(6-3)";
-	$rpn = mathexp_to_rpn($exp); // = 43.3333333
-	echo "$exp\n";
-	print_r($rpn);
-	print_r(calculate_rpn($rpn));
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n3: ".calculate("(120 / (1 + 9 / 3) / 10");
+	echo "\nerr: ".calculate("22 + (1");
+	echo "\nerr: ".calculate("22) + 1");
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
+	echo "\n";
+
+	function calculate($exp) {
+		return calculate_rpn(mathexp_to_rpn($exp));
+	}
 
 	function calculate_rpn($rpnexp) {
 		$stack = array();
@@ -38,10 +48,8 @@
 			} else {
 				array_push($stack, $item);
 			}
-			echo "\n".$item."\n";
-			print_r($stack);
 		}
-		return $stack;
+		return $stack[0];
 	}
 
 	function mathexp_to_rpn($mathexp) {
@@ -51,27 +59,26 @@
 
 		while ($i < strlen($mathexp)) {
 			$char = $mathexp{$i};
-			if ($char == '(') {
-				$i++; continue;
-			}
 			if ($char >= '0' && $char <= '9') {
 				$num = readnumber($mathexp, $i);
 				array_push($final_stack, $num);
 				$i += strlen($num); continue;
 			}
-			if (is_operator($char)) {
+			if (is_operator($char) || $char == '(') {
 				array_push($operator_stack, $char);
 				$i++; continue;
 			}
 			if ($char == ')') {
-				// transfer operator to final stack
-				$operator = array_pop($operator_stack);
-				array_push($final_stack, $operator);
+				// transfer operators to final stack
+				do {
+					$operator = array_pop($operator_stack);
+					if ($operator == '(') break;
+					array_push($final_stack, $operator);
+				} while ($operator);
 				$i++; continue;
 			}
 			$i++;
 		}
-		echo "klaar!\n";
 		while ($oper = array_pop($operator_stack)) {
 			array_push($final_stack, $oper);
 		}
