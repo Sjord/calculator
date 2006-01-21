@@ -1,16 +1,9 @@
 <?php
 
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n3: ".calculate("(120 / (1 + 9 / 3) / 10");
-	echo "\nerr: ".calculate("22 + (1");
-	echo "\nerr: ".calculate("22) + 1");
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n3: ".calculate("(23 + 7)/(13 - 3)");
-	echo "\n";
+	echo "3: ".calculate("(23 + 7)/(13 - 3)")."\n";
+	echo "3: ".calculate("(120 / (1 + 9 / 3) / 10")."\n";
+	echo "3: ".calculate("3 + 3 - 3 * 3 / 3")."\n";
+	echo "0.60: ".calculate("1 + 2 - 3  * 4 / 5")."\n";
 
 	function calculate($exp) {
 		return calculate_rpn(mathexp_to_rpn($exp));
@@ -53,6 +46,15 @@
 	}
 
 	function mathexp_to_rpn($mathexp) {
+		$precedence = array(
+			'(' => 0,
+			'-' => 3,
+			'+' => 3,
+			'*' => 6,
+			'/' => 6,
+			'%' => 6
+		);
+	
 		$i = 0;
 		$final_stack = array();
 		$operator_stack = array();
@@ -64,7 +66,16 @@
 				array_push($final_stack, $num);
 				$i += strlen($num); continue;
 			}
-			if (is_operator($char) || $char == '(') {
+			if (is_operator($char)) {
+				$top = end($operator_stack);
+				if ($top && $precedence[$char] <= $precedence[$top]) {
+					$oper = array_pop($operator_stack);
+					array_push($final_stack, $oper);
+				}
+				array_push($operator_stack, $char);
+				$i++; continue;
+			}
+			if ($char == '(') {
 				array_push($operator_stack, $char);
 				$i++; continue;
 			}
