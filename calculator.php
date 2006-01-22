@@ -1,9 +1,14 @@
 <?php
-
-	echo "3: ".calculate("(23 + 7)/(13 - 3)")."\n";
-	echo "3: ".calculate("(120 / (1 + 9 / 3) / 10")."\n";
-	echo "3: ".calculate("3 + 3 - 3 * 3 / 3")."\n";
-	echo "0.60: ".calculate("1 + 2 - 3  * 4 / 5")."\n";
+	
+	echo "90165: ".calculate("27+38+81+48*33*53+91*53+82*14+96")."\n";
+	echo "616222: ".calculate("22*26*53+66*8+7*76*25*44+78+100")."\n";
+	echo "170011: ".calculate("57+14*71+86*39*24+48*3+92*16*60")."\n";
+	echo "168: ".calculate("93-10/7-66/50/10/32+35+33+12-4")."\n";
+	echo "272: ".calculate("81-12+46+83/40/53+34+95/80*52+71")."\n";
+	echo "-78: ".calculate("32/70*44/77*89/12*45+15+47-90-50")."\n";
+	echo "-7073.66: ".calculate("85.21+5.42+34.96*37.59-60.15*94.31-47.53*59.03-50.54/14.01/44")."\n";
+	echo "-17.80: ".calculate("0.61-38.2+46.08/71.23*85.53-68.92+61.41/46.79*88.71+9.93/27")."\n";
+	echo "51.08: ".calculate("50.08-47.99/68.32*73.39+80.06/46.73+13.55*94.26/30.13/25.74/41")."\n";
 
 	function calculate($exp) {
 		return calculate_rpn(mathexp_to_rpn($exp));
@@ -61,7 +66,7 @@
 
 		while ($i < strlen($mathexp)) {
 			$char = $mathexp{$i};
-			if ($char >= '0' && $char <= '9') {
+			if (is_number($char)) {
 				$num = readnumber($mathexp, $i);
 				array_push($final_stack, $num);
 				$i += strlen($num); continue;
@@ -98,7 +103,7 @@
 
 	function readnumber($string, $i) {
 		$number = '';
-		while ($string{$i} >= '0' && $string{$i} <= '9') {
+		while (is_number($string{$i})) {
 			$number .= $string{$i};
 			$i++;
 		}
@@ -108,5 +113,9 @@
 	function is_operator($char) {
 		static $operators = array('+', '-', '/', '*', '%');
 		return in_array($char, $operators);
+	}
+
+	function is_number($char) {
+		return (($char == '.') || ($char >= '0' && $char <= '9'));
 	}
 ?>
